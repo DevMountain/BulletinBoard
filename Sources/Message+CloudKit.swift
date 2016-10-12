@@ -16,8 +16,8 @@ extension Message {
 	static var dateKey: String { return "Date" }
 	
 	init?(cloudKitRecord: CKRecord) {
-		guard let messageText = cloudKitRecord["MessageText"] as? String,
-			date = cloudKitRecord.creationDate ?? (cloudKitRecord["Date"] as? NSDate)
+		guard let messageText = cloudKitRecord[Message.messageTextKey] as? String,
+			date = cloudKitRecord.creationDate ?? (cloudKitRecord[Message.dateKey] as? NSDate)
 			where cloudKitRecord.recordType == Message.recordType else { return nil }
 		
 		self.init(messageText: messageText, date: date)
@@ -25,8 +25,8 @@ extension Message {
 	
 	var cloudKitRecord: CKRecord {
 		let record = CKRecord(recordType: Message.recordType)
-		record["MessageText"] = messageText
-		record["Date"] = date
+		record[Message.messageTextKey] = messageText
+		record[Message.dateKey] = date
 		return record
 	}
 }
