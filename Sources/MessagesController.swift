@@ -10,19 +10,20 @@ import Foundation
 import CloudKit
 import UIKit
 
-public let MessagesControllerDidRefreshNotification = "MessagesControllerDidRefreshNotification"
+extension MessagesController {
+	static let DidRefreshNotification = Notification.Name("DidRefreshNotification")
+}
 
-public class MessagesController: NSObject {
-	public static let sharedController = MessagesController()
+class MessagesController {
+	static let sharedController = MessagesController()
 	
-	override init() {
-		super.init()
+	init() {
 		refresh()
 	}
 	
 	// MARK: Public Methods
 	
-	func postNewMessage(message: Message, completion: ((NSError?) -> Void)? = nil) {
+	func postNewMessage(_ message: Message, completion: ((Error?) -> Void)? = nil) {
 		let record = message.cloudKitRecord
 		
 		cloudKitManager.saveRecord(message.cloudKitRecord) { (error) in
@@ -35,7 +36,7 @@ public class MessagesController: NSObject {
 		}
 	}
 	
-	func refresh(completion: ((NSError?) -> Void)? = nil) {
+	func refresh(_ completion: ((Error?) -> Void)? = nil) {
 		let sortDescriptors = [NSSortDescriptor(key: Message.dateKey, ascending: false)]
 		cloudKitManager.fetchRecordsWithType(Message.recordType, sortDescriptors: sortDescriptors) {
 			(records, error) in
@@ -52,7 +53,7 @@ public class MessagesController: NSObject {
 		}
 	}
 	
-	func subscribeForPushNotifications(completion: ((NSError?) -> Void)? = nil) {
+	func subscribeForPushNotifications(_ completion: ((Error?) -> Void)? = nil) {
 		
 		cloudKitManager.subscribeToCreationOfRecordsWithType(Message.recordType) { (error) in
 			if let error = error {
@@ -70,9 +71,9 @@ public class MessagesController: NSObject {
 	
 	private(set) var messages = [Message]() {
 		didSet {
-			dispatch_async(dispatch_get_main_queue()) { 
-				let nc = NSNotificationCenter.defaultCenter()
-				nc.postNotificationName(MessagesControllerDidRefreshNotification, object: self)
+			DispatchQueue.main.async { 
+				let nc = NotificationCenter.default
+				nc.post(name: MessagesController.DidRefreshNotification, object: self)
 			}
 		}
 	}
@@ -82,15 +83,3 @@ public class MessagesController: NSObject {
 	private let cloudKitManager = CloudKitManager()
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-

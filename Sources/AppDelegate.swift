@@ -12,22 +12,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 
-
-	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		
-		let notificationSettings = UIUserNotificationSettings(forTypes: [.Alert, .Sound], categories: nil)
-		UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
-		
+		let notificationSettings = UIUserNotificationSettings(types: [.alert, .sound], categories: nil)
+		UIApplication.shared.registerUserNotificationSettings(notificationSettings)
 		
 		return true
 	}
 	
-	func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
-		UIApplication.sharedApplication().registerForRemoteNotifications()
+	func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
+		UIApplication.shared.registerForRemoteNotifications()
 		MessagesController.sharedController.subscribeForPushNotifications()
 	}
 
-	func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
 		MessagesController.sharedController.refresh()
 	}
 
