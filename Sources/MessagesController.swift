@@ -23,11 +23,11 @@ class MessagesController {
 	
 	// MARK: Public Methods
 	
-	func postNewMessage(_ message: Message, completion: ((Error?) -> Void)? = nil) {
+	func post(message: Message, completion: @escaping ((Error?) -> Void) = { _ in }) {
 		let record = message.cloudKitRecord
 		
-		cloudKitManager.saveRecord(message.cloudKitRecord) { (error) in
-			defer { completion?(error) }
+		cloudKitManager.save(message.cloudKitRecord) { (error) in
+			defer { completion(error) }
 			if let error = error {
 				NSLog("Error saving \(message) to CloudKit: \(error)")
 				return
@@ -36,12 +36,12 @@ class MessagesController {
 		}
 	}
 	
-	func refresh(_ completion: ((Error?) -> Void)? = nil) {
+	func refresh(completion: @escaping ((Error?) -> Void) = { _ in }) {
 		let sortDescriptors = [NSSortDescriptor(key: Message.dateKey, ascending: false)]
-		cloudKitManager.fetchRecordsWithType(Message.recordType, sortDescriptors: sortDescriptors) {
+		cloudKitManager.fetchRecords(ofType: Message.recordType, sortDescriptors: sortDescriptors) {
 			(records, error) in
 			
-			defer { completion?(error) }
+			defer { completion(error) }
 			
 			if let error = error {
 				NSLog("Error fetching messages: \(error)")
@@ -53,15 +53,15 @@ class MessagesController {
 		}
 	}
 	
-	func subscribeForPushNotifications(_ completion: ((Error?) -> Void)? = nil) {
+	func subscribeToPushNotifications(completion: @escaping ((Error?) -> Void) = { _ in }) {
 		
-		cloudKitManager.subscribeToCreationOfRecordsWithType(Message.recordType) { (error) in
+		cloudKitManager.subscribeToCreationOfRecords(ofType: Message.recordType) { (error) in
 			if let error = error {
 				NSLog("Error saving subscription: \(error)")
 			} else {
 				NSLog("Subscribed to push notifications for new messages")
 			}
-			completion?(error)
+			completion(error)
 		}
 	}
 	

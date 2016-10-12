@@ -18,24 +18,24 @@ class MessagesListViewController: UIViewController, UITextFieldDelegate, UITable
 		               name: MessagesController.DidRefreshNotification,
 		               object: nil)
 	}
+	
+	// MARK: Actions
 
 	@IBAction func post(_ sender: UIButton) {
 		guard let messageText = textField.text else { return }
 		textField.resignFirstResponder()
 		let message = Message(messageText: messageText, date: Date())
-		MessagesController.sharedController.postNewMessage(message)
+		MessagesController.sharedController.post(message: message)
 	}
 	
-	func messagesWereUpdated(_ notification: Notification) {
-		tableView?.reloadData()
-	}
+	// MARK: UITextFieldDelegate
 	
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		textField.resignFirstResponder()
 		return true
 	}
 	
-	// MARK: UITableViewDelegate/Datasource
+	// MARK: UITableViewDelegate/DataSource
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return MessagesController.sharedController.messages.count
@@ -62,6 +62,14 @@ class MessagesListViewController: UIViewController, UITextFieldDelegate, UITable
 		
 		return cell
 	}
+	
+	// MARK: Notifications
+	
+	func messagesWereUpdated(_ notification: Notification) {
+		tableView?.reloadData()
+	}
+	
+	// MARK: Properties
 	
 	@IBOutlet var textField: UITextField!
 	@IBOutlet var tableView: UITableView!

@@ -19,24 +19,24 @@ class CloudKitManager {
     
 	let database = CKContainer.default().publicCloudDatabase
 	
-	func fetchRecordsWithType(_ type: String,
+	func fetchRecords(ofType type: String,
 	                          sortDescriptors: [NSSortDescriptor]? = nil,
 	                          completion: @escaping ([CKRecord]?, Error?) -> Void) {
 		
 		let query = CKQuery(recordType: type, predicate: NSPredicate(value: true))
 		query.sortDescriptors = sortDescriptors
 		
-		database.perform(query, inZoneWith: nil, completionHandler: completion as! ([CKRecord]?, Error?) -> Void)
+		database.perform(query, inZoneWith: nil, completionHandler: completion)
 	}
 	
-	func saveRecord(_ record: CKRecord, completion: @escaping ((Error?) -> Void) = { _ in }) {
+	func save(_ record: CKRecord, completion: @escaping ((Error?) -> Void) = { _ in }) {
 		
 		database.save(record, completionHandler: { (record, error) in
 			completion(error)
 		}) 
 	}
 	
-	func subscribeToCreationOfRecordsWithType(_ type: String, completion: ((NSError?) -> Void)? = nil) {
+	func subscribeToCreationOfRecords(ofType type: String, completion: @escaping ((Error?) -> Void) = { _ in }) {
 		let subscription = CKSubscription(recordType: Message.recordType, predicate: NSPredicate(value: true), options: .firesOnRecordCreation)
 		let notificationInfo = CKNotificationInfo()
 		notificationInfo.alertBody = "There's a new message on the bulletin board."
@@ -46,7 +46,7 @@ class CloudKitManager {
 			if let error = error {
 				NSLog("Error saving subscription: \(error)")
 			}
-			completion?(error as NSError?)
+			completion(error)
 		}) 
 	}
 }
