@@ -8,12 +8,7 @@
 
 import Foundation
 import CloudKit
-
-#if os(OSX)
-	import Cocoa
-#else
-	import UIKit
-#endif
+import UIKit
 
 public let MessagesControllerDidRefreshNotification = "MessagesControllerDidRefreshNotification"
 

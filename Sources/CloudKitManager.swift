@@ -2,7 +2,7 @@
 //  CloudKitManager.swift
 //  Timeline
 //
-//  Created by Caleb Hicks on 5/27/16.
+//  Created by Andrew Madsen on 6/18/16.
 //  Copyright © 2016 DevMountain. All rights reserved.
 //
 
