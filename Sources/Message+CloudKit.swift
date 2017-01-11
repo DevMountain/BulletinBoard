@@ -17,16 +17,16 @@ extension Message {
 	
 	init?(cloudKitRecord: CKRecord) {
 		guard let messageText = cloudKitRecord["MessageText"] as? String,
-			let date = cloudKitRecord.creationDate ?? (cloudKitRecord["Date"] as? Date)
+			let date = cloudKitRecord.creationDate ?? (cloudKitRecord[Message.dateKey] as? Date)
 			, cloudKitRecord.recordType == Message.recordType else { return nil }
-		
+    
 		self.init(messageText: messageText, date: date)
 	}
 	
 	var cloudKitRecord: CKRecord {
 		let record = CKRecord(recordType: Message.recordType)
-		record["MessageText"] = messageText as CKRecordValue?
-		record["Date"] = date as NSDate
+		record[Message.messageTextKey] = messageText as CKRecordValue?
+		record[Message.dateKey] = date as NSDate
 		return record
 	}
 }
