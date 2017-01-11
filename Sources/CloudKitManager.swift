@@ -37,7 +37,7 @@ class CloudKitManager {
 	}
 	
 	func subscribeToCreationOfRecords(ofType type: String, completion: @escaping ((Error?) -> Void) = { _ in }) {
-		let subscription = CKQuerySubscription(recordType: Message.recordType, predicate: NSPredicate(value: true), options: .firesOnRecordCreation)
+		let subscription = CKQuerySubscription(recordType: type, predicate: NSPredicate(value: true), options: .firesOnRecordCreation)
 
 		let notificationInfo = CKNotificationInfo()
 		notificationInfo.alertBody = "There's a new message on the bulletin board."
