@@ -7,27 +7,36 @@
 //
 
 import UIKit
+import UserNotifications
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+		UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (success, error) in
+			if let error = error {
+				NSLog("Error requesting authorization for notifications: \(error)")
+				return
+			}
+		}
 		
-		let notificationSettings = UIUserNotificationSettings(forTypes: [.Alert, .Sound], categories: nil)
-		UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
-		
+		UIApplication.shared.registerForRemoteNotifications()
 		
 		return true
 	}
 	
-	func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
-		UIApplication.sharedApplication().registerForRemoteNotifications()
-		MessagesController.sharedController.subscribeForPushNotifications()
+	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+		MessagesController.sharedController.subscribeToPushNotifications()
 	}
-
-	func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+	
+	func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+		NSLog("Error registering for remote notifications: \(error)")
+	}
+	
+	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
 		MessagesController.sharedController.refresh()
 	}
 

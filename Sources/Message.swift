@@ -10,5 +10,5 @@ import Foundation
 
 struct Message {
 	let messageText: String
-	let date: NSDate
+	let date: Date
 }

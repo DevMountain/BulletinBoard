@@ -12,56 +12,64 @@ class MessagesListViewController: UIViewController, UITextFieldDelegate, UITable
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		let nc = NSNotificationCenter.defaultCenter()
+		let nc = NotificationCenter.default
 		nc.addObserver(self,
 		               selector: #selector(messagesWereUpdated(_:)),
-		               name: MessagesControllerDidRefreshNotification,
+		               name: MessagesController.DidRefreshNotification,
 		               object: nil)
 	}
+	
+	// MARK: Actions
 
-	@IBAction func post(sender: UIButton) {
+	@IBAction func post(_ sender: UIButton) {
 		guard let messageText = textField.text else { return }
 		textField.resignFirstResponder()
-		let message = Message(messageText: messageText, date: NSDate())
-		MessagesController.sharedController.postNewMessage(message)
+		let message = Message(messageText: messageText, date: Date())
+		MessagesController.sharedController.post(message: message)
 	}
 	
-	func messagesWereUpdated(notification: NSNotification) {
-		tableView?.reloadData()
-	}
+	// MARK: UITextFieldDelegate
 	
-	func textFieldShouldReturn(textField: UITextField) -> Bool {
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		textField.resignFirstResponder()
 		return true
 	}
 	
-	// MARK: UITableViewDelegate/Datasource
+	// MARK: UITableViewDelegate/DataSource
 
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return MessagesController.sharedController.messages.count
 	}
 	
-	let dateFormatter: NSDateFormatter = {
-		let formatter = NSDateFormatter()
-		formatter.dateStyle = .ShortStyle
+	let dateFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateStyle = .short
 		formatter.doesRelativeDateFormatting = true
-		formatter.timeStyle = .ShortStyle
+		formatter.timeStyle = .short
 		return formatter
 	}()
 	
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		guard let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell") else {
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		guard let cell = tableView.dequeueReusableCell(withIdentifier: "MessageCell") else {
 			return UITableViewCell()
 		}
 		
 		let messages = MessagesController.sharedController.messages
-		let message = messages[indexPath.row]
+		let message = messages[(indexPath as NSIndexPath).row]
 		
 		cell.textLabel?.text = message.messageText
-		cell.detailTextLabel?.text = dateFormatter.stringFromDate(message.date)
+		cell.detailTextLabel?.text = dateFormatter.string(from: message.date as Date)
 		
 		return cell
 	}
+	
+	// MARK: Notifications
+	
+	func messagesWereUpdated(_ notification: Notification) {
+		tableView?.reloadData()
+	}
+	
+	// MARK: Properties
 	
 	@IBOutlet var textField: UITextField!
 	@IBOutlet var tableView: UITableView!
