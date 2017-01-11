@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 	
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-		MessagesController.sharedController.subscribeToPushNotifications()
+		MessagesController.shared.subscribeToPushNotifications()
 	}
 	
 	func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 	
 	func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-		MessagesController.sharedController.refresh()
+		MessagesController.shared.refresh()
 	}
 
 

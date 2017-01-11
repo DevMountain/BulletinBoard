@@ -25,7 +25,7 @@ class MessagesListViewController: UIViewController, UITextFieldDelegate, UITable
 		guard let messageText = textField.text else { return }
 		textField.resignFirstResponder()
 		let message = Message(messageText: messageText, date: Date())
-		MessagesController.sharedController.post(message: message)
+		MessagesController.shared.post(message: message)
 	}
 	
 	// MARK: UITextFieldDelegate
@@ -38,7 +38,7 @@ class MessagesListViewController: UIViewController, UITextFieldDelegate, UITable
 	// MARK: UITableViewDelegate/DataSource
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return MessagesController.sharedController.messages.count
+		return MessagesController.shared.messages.count
 	}
 	
 	let dateFormatter: DateFormatter = {
@@ -54,7 +54,7 @@ class MessagesListViewController: UIViewController, UITextFieldDelegate, UITable
 			return UITableViewCell()
 		}
 		
-		let messages = MessagesController.sharedController.messages
+		let messages = MessagesController.shared.messages
 		let message = messages[(indexPath as NSIndexPath).row]
 		
 		cell.textLabel?.text = message.messageText

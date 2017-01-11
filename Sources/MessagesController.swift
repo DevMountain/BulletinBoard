@@ -15,7 +15,7 @@ extension MessagesController {
 }
 
 class MessagesController {
-	static let sharedController = MessagesController()
+	static let shared = MessagesController()
 	
 	init() {
 		refresh()
