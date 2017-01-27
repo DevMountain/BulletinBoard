@@ -21,7 +21,7 @@ On the first day, build BulletinBoard and include basic functionality including 
 
 Day 2:
 
-On the second day, add push notification support to the app using `CKSubscription`.
+On the second day, add push notification support to the app using `CKQuerySubscription`.
 
 1. Add the `subscribe()` method to `CloudKitManager`
 2. In `AppDelegate`, add code to register for and handle push notifications.
