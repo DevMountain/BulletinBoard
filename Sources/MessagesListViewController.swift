@@ -65,7 +65,7 @@ class MessagesListViewController: UIViewController, UITextFieldDelegate, UITable
 	
 	// MARK: Notifications
 	
-	func messagesWereUpdated(_ notification: Notification) {
+	@objc func messagesWereUpdated(_ notification: Notification) {
 		tableView?.reloadData()
 	}
 	
